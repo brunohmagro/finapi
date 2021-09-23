@@ -37,6 +37,22 @@ app.post('/account', (req, res) => {
 
 })
 
+app.get('/statement', (req, res) => {
+
+    const { cpf } = req.headers
+
+    const customer  = customers.find(customer => customer.cpf === cpf)
+
+    if(customer) {
+        return res.json({
+            response: customer.statement
+        })
+    }
+
+    return res.status(404).json({ response: 'Customer not found' })
+
+})
+
 app.listen(3333, () => {
     console.log('Server is up 🚀')
 })
