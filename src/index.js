@@ -157,6 +157,14 @@ app.get('/account', verifyIfExistAccountCpf, (req, res) => {
     return res.status(200).json(user)
 })
 
+app.delete('/account', verifyIfExistAccountCpf, (req, res) => {
+    const { customer } = req
+
+    customers.splice(customer, 1)
+
+    return res.status(204).send()
+})
+
 app.listen(3333, () => {
     console.log('Server is up 🚀')
 })
