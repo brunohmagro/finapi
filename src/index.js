@@ -131,6 +131,32 @@ app.get('/statement/date', verifyIfExistAccountCpf, (req, res) => {
 
 })
 
+app.put('/account', verifyIfExistAccountCpf, (req, res) => {
+    const { name } = req.body
+    const { customer } = req
+
+    customer.name = name
+
+    const user = {
+        id: customer.id,
+        name: customer.name,
+    }
+
+    return res.status(202).json(user)
+
+})
+
+app.get('/account', verifyIfExistAccountCpf, (req, res) => {
+    const { customer } = req
+
+    const user = {
+        id: customer.id,
+        name: customer.name,
+    }
+
+    return res.status(200).json(user)
+})
+
 app.listen(3333, () => {
     console.log('Server is up 🚀')
 })
