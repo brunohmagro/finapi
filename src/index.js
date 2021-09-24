@@ -165,6 +165,14 @@ app.delete('/account', verifyIfExistAccountCpf, (req, res) => {
     return res.status(204).send()
 })
 
+app.get('/balance', verifyIfExistAccountCpf, (req, res) => {
+    const { customer } = req
+
+    const balance = getBalance(customer.statement)
+
+    return res.status(200).json({ balance: balance })
+})
+
 app.listen(3333, () => {
     console.log('Server is up 🚀')
 })
