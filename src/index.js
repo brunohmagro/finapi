@@ -24,6 +24,18 @@ function verifyIfExistAccountCpf(req, res, next) {
     return next()
 }
 
+function getBalance(statement) {
+    const balance = statement.reduce((acc, operation) => {
+        if(operation.type === 'credit') {
+            return acc + operation.amount
+        }else {
+            return acc - operation.amount
+        }
+    }, 0)
+
+    return balance
+}
+
 /**
  * cpf - string
  * name - string
@@ -81,6 +93,27 @@ app.post('/deposit', verifyIfExistAccountCpf, (req, res) => {
 
     return res.status(201).send()
 
+})
+
+app.post('/withdraw', verifyIfExistAccountCpf, (req, res) => {
+    const { amount } = req.body
+    const { customer } = req
+
+    const balance = getBalance(customer.statement)
+
+    if(amount > balance) {
+        return res.status(400).json({ response: 'Amount requested not be available' })
+    }
+
+    const withdrawOperation = {
+        amount,
+        created_at: new Date(),
+        type: 'withdraw'
+    }
+
+    customer.statement.push(withdrawOperation)
+
+    return res.status(201).send()
 })
 
 app.listen(3333, () => {
